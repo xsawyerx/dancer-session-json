@@ -6,7 +6,7 @@ use Dancer ':syntax';
 use Dancer::ModuleLoader;
 use Dancer::Logger;
 use File::Path qw(mkpath rmtree);
-
+use utf8;
 use Dancer::Session::JSON;
 
 BEGIN {
@@ -40,6 +40,7 @@ my $json_file = $session->json_file;
 like $json_file, qr/\.json$/, 'session file have valid name';
 
 $session->{foo} = 42;
+$session->{test} = "тест";
 $session->flush;
 $s = Dancer::Session::JSON->retrieve( $s->id );
 is_deeply $s, $session, "session is changed on flush";

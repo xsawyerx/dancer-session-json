@@ -16,7 +16,7 @@ use Dancer::FileUtils qw(path set_file_mode);
 # static
 
 my %session_dir_initialized;
-my $json = JSON->new;
+my $json = JSON->new->utf8;
 
 sub init {
     my $self = shift;
@@ -96,7 +96,6 @@ sub flush {
 
     open my $fh, '>', $session_file or die "Can't open '$session_file': $!\n";
     flock $fh, LOCK_EX or die "Can't lock file '$session_file': $!\n";
-    set_file_mode($fh);
     print {$fh} $json->allow_blessed->convert_blessed->encode($self);
     close $fh or die "Can't close '$session_file': $!\n";
 
