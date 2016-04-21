@@ -6,7 +6,7 @@ package Dancer::Session::JSON;
 use Carp;
 use base 'Dancer::Session::Abstract';
 
-use JSON -convert_blessed_universally;
+use JSON;
 use Fcntl ':flock';
 use Dancer::Logger;
 use Dancer::ModuleLoader;
@@ -97,7 +97,10 @@ sub flush {
     open my $fh, '>', $session_file or die "Can't open '$session_file': $!\n";
     flock $fh, LOCK_EX or die "Can't lock file '$session_file': $!\n";
     set_file_mode($fh);
-    print {$fh} $json->allow_blessed->convert_blessed->encode($self);
+    print {$fh} $json->allow_blessed->convert_blessed->encode(
+        +{ %{$self} }
+    );
+
     close $fh or die "Can't close '$session_file': $!\n";
 
     return $self;
