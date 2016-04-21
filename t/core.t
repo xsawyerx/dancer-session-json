@@ -36,7 +36,7 @@ is_deeply(
     'exact session content',
 );
 
-my $json_file = $session->json_file;
+my $json_file = $session->_json_file;
 like $json_file, qr/\.json$/, 'session file have valid name';
 
 $session->{foo} = 42;

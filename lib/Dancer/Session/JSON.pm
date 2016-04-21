@@ -62,7 +62,7 @@ sub reset {
 sub retrieve {
     my $class        = shift;
     my $id           = shift;
-    my $session_file = json_file($id);
+    my $session_file = _json_file($id);
 
     return unless -f $session_file;
 
@@ -76,7 +76,7 @@ sub retrieve {
 }
 
 # instance
-sub json_file {
+sub _json_file {
     my $id = shift;
     return path( setting('session_dir'), "$id.json" );
 }
@@ -84,7 +84,7 @@ sub json_file {
 sub destroy {
     my ($self) = @_;
 
-    my $file = json_file( $self->id );
+    my $file = _json_file( $self->id );
     Dancer::Logger::core("trying to remove session file: $file");
 
     -f $file and unlink $file;
@@ -92,7 +92,7 @@ sub destroy {
 
 sub flush {
     my $self         = shift;
-    my $session_file = json_file( $self->id );
+    my $session_file = _json_file( $self->id );
 
     open my $fh, '>', $session_file or die "Can't open '$session_file': $!\n";
     flock $fh, LOCK_EX or die "Can't lock file '$session_file': $!\n";
